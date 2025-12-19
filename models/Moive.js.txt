@@ -1,0 +1,13 @@
+import mongoose from "mongoose";
+
+const movieSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  category: String,
+  poster: String,
+  video: String,
+  year: Number,
+  rating: Number
+});
+
+export default mongoose.model("Movie", movieSchema);

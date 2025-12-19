@@ -1,0 +1,40 @@
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+
+export const registerUser = async (req, res) => {
+  try {
+    const user = await User.create(req.body);
+    res.json({ message: "User registered", user });
+  } catch (err) {
+    res.status(500).json({ error: "Register failed" });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  const user = await User.findOne({
+    email: req.body.email,
+    password: req.body.password
+  });
+
+  if (!user) return res.status(401).json({ message: "Invalid login" });
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  res.json({ token });
+};
+
+export const updateProgress = async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  const index = user.history.findIndex(
+    (h) => h.movieId === req.body.movieId
+  );
+
+  if (index >= 0) {
+    user.history[index].progress = req.body.progress;
+  } else {
+    user.history.push(req.body);
+  }
+
+  await user.save();
+  res.json({ message: "Progress updated" });
+};
