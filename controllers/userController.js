@@ -11,9 +11,11 @@ export const loginUser = async (req, res) => {
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
+
   const token = jwt.sign(
     { id: user._id },
     process.env.JWT_SECRET
   );
+
   res.json({ token });
 };
