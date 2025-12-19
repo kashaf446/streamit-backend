@@ -1,14 +1,9 @@
-import User from "../models/User.js";
-import jwt from "jsonwebtoken";
+import express from "express";
+import { registerUser, loginUser } from "../controllers/userController.js";
 
-export const registerUser = async (req, res) => {
-  const user = await User.create(req.body);
-  res.json(user);
-};
+const router = express.Router();
 
-export const loginUser = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(404).json({ message: "User not found" });
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-  res.json({ token });
-};
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+export default router;
