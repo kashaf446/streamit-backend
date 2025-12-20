@@ -1,14 +1,8 @@
-export const loginUser = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+import express from "express";
+import { loginUser } from "../controllers/userController.js";
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
+const router = express.Router();
 
-  const token = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET
-  );
+router.post("/login", loginUser);
 
-  res.json({ token });
-};
+export default router;
